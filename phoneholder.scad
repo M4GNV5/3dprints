@@ -4,24 +4,29 @@
 
 thickness = 1;
 height = 130;
-width = 62;
+width = 64;
 
 screwPosition = 10;
-screwDiameter = 2;
+screwDiameter = 3;
+screwWindowDepth = 2;
 
-holderHeight = 10;
+holderHeight = 13;
 holderWidth = 15;
 
-difference()
+translate([0, 0, -thickness - screwWindowDepth]) difference()
 {
-	cube([width, height, thickness], true);
-	translate([-screwPosition, 0, -1]) cylinder(r = screwDiameter, h = thickness + 2);
-	translate([screwPosition, 0, -1]) cylinder(r = screwDiameter, h = thickness + 2);
+	translate([-width / 2, -height / 2, 0])
+		cube([width, height, thickness + screwWindowDepth]);
+
+	translate([-screwPosition - screwDiameter - 1, -screwDiameter / 2 - 1, thickness])
+		cube([2 * screwPosition + 2 * screwDiameter + 2, screwDiameter + 2, screwWindowDepth + 1]);
+	translate([-screwPosition, 0, - 1]) cylinder(d = screwDiameter, h = 2 * thickness + 2);
+	translate([screwPosition, 0, - 1]) cylinder(d = screwDiameter, h = 2 * thickness + 2);
 };
 
 module bottomHolder()
 {
-	translate([-width / 2, -height / 2, thickness / 2]) difference()
+	translate([-width / 2, -height / 2, 0]) difference()
 	{
 		cube([holderWidth, holderWidth, holderHeight + thickness]);
 		translate([holderWidth + thickness, holderWidth + thickness, -2])
@@ -33,7 +38,7 @@ mirror([1, 0, 0]) bottomHolder();
 
 module topHolder()
 {
-	translate([-width / 2, height / 2 - holderWidth, thickness / 2]) difference()
+	translate([-width / 2, height / 2 - holderWidth, 0]) difference()
 	{
 		cube([holderWidth, holderWidth, holderHeight]);
 		translate([thickness, -1, -thickness - 1])
