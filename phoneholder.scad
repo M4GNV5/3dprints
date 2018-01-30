@@ -4,8 +4,9 @@
 
 thickness = 1;
 height = 130;
-width = 64;
+width = 68;
 
+screwWindowLocation = 30;
 screwPosition = 13.5;
 screwDiameter = 3;
 screwWindowDepth = 2;
@@ -15,17 +16,23 @@ holderThickness = 3;
 holderHeight = 13;
 holderWidth = 15;
 
+//base plate
 translate([0, 0, -thickness - screwWindowDepth]) difference()
 {
 	translate([-width / 2, -height / 2, 0])
 		cube([width, height, thickness + screwWindowDepth]);
 
-	windowWidth = 2 * screwPosition + screwDiameter + 2 * screwWindowSpacing;
-	translate([-windowWidth / 2, -screwWindowSpacing - screwDiameter / 2, thickness])
-		cube([windowWidth, 2 * screwWindowSpacing + screwDiameter, screwWindowDepth + 1]);
+	translate([0, screwWindowLocation, 0])
+	{
+		//screw head box
+		windowWidth = 2 * screwPosition + screwDiameter + 2 * screwWindowSpacing;
+		translate([-windowWidth / 2, -screwWindowSpacing - screwDiameter / 2, thickness])
+			cube([windowWidth, 2 * screwWindowSpacing + screwDiameter, screwWindowDepth + 1]);
 
-	translate([-screwPosition, 0, - 1]) cylinder(d = screwDiameter, h = 2 * thickness + 2, $fn = 360);
-	translate([screwPosition, 0, - 1]) cylinder(d = screwDiameter, h = 2 * thickness + 2, $fn = 360);
+		//screw holes
+		translate([-screwPosition, 0, - 1]) cylinder(d = screwDiameter, h = 2 * thickness + 2, $fn = 360);
+		translate([screwPosition, 0, - 1]) cylinder(d = screwDiameter, h = 2 * thickness + 2, $fn = 360);
+	};
 };
 
 module bottomHolder()
@@ -40,26 +47,31 @@ module bottomHolder()
 bottomHolder();
 mirror([1, 0, 0]) bottomHolder();
 
-translate([-width / 2, height / 2 - holderWidth, 0])
+module topHolder()
 {
-	difference()
+	translate([-width / 2, height / 2 - holderWidth, 0])
 	{
-		cube([holderWidth + holderThickness, holderWidth, holderHeight + holderThickness]);
-		translate([holderThickness, -1, -1])
-			cube([holderWidth + 2 * thickness, holderWidth + 2, holderHeight + 1]);
-	};
-	translate([3, 0, holderHeight - 3]) difference()
-	{
-		cube([3, holderWidth, 3]);
-		translate([2.5, -1, 0.5])
-			rotate([-90, 0, 0])
-			cylinder(d = 5.1, h = holderWidth + 2, $fn = 360);
-	};
-	translate([3, 0, 0]) difference()
-	{
-		cube([3, holderWidth, 3]);
-		translate([2.5, -1, 2.5])
-			rotate([-90, 0, 0])
-			cylinder(d = 5.1, h = holderWidth + 2, $fn = 360);
+		difference()
+		{
+			cube([holderWidth + holderThickness, holderWidth, holderHeight + holderThickness]);
+			translate([holderThickness, -1, -1])
+				cube([holderWidth + 2 * thickness, holderWidth + 2, holderHeight + 1]);
+		};
+		translate([3, 0, holderHeight - 3]) difference()
+		{
+			cube([3, holderWidth, 3]);
+			translate([2.5, -1, 0.5])
+				rotate([-90, 0, 0])
+				cylinder(d = 5.1, h = holderWidth + 2, $fn = 360);
+		};
+		translate([3, 0, 0]) difference()
+		{
+			cube([3, holderWidth, 3]);
+			translate([2.5, -1, 2.5])
+				rotate([-90, 0, 0])
+				cylinder(d = 5.1, h = holderWidth + 2, $fn = 360);
+		};
 	};
 };
+topHolder();
+mirror([1, 0, 0]) topHolder();
